@@ -47,6 +47,16 @@ if (!module.parent) {
         //console.log(profile);
         var glucose_status = detectsensitivity.getLastGlucose(glucose_data);
         var isf_data = require(cwd + '/' + isf_input);
+
+        if (isf_data.units == 'mmol/L') {
+            /* Convert to mg/dL */
+            isf_data.units = 'mg/dL'
+            for (a in isf_data.sensitivities) {
+                var item = isf_data.sensitivities[a];
+                item.sensitivity = Math.round(item.sensitivity*18.0);
+            }
+        }
+
         if (isf_data.units !== 'mg/dL') {
             console.log('ISF is expected to be expressed in mg/dL.'
                     , 'Found', isf_data.units, 'in', isf_input, '.');
